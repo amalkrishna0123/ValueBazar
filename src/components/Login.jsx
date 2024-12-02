@@ -2,6 +2,7 @@ import React from 'react'
 import bgImage from "../assets/bgimage.jpg"
 import blackShade from "../assets/blackshade.png"
 import logo from "../assets/logo.png"
+import { Link } from "react-router-dom"
 
 const Login = () => {
   return (
@@ -28,6 +29,9 @@ const Login = () => {
                     <input type="password" placeholder='Password' className='w-full outline-none border-none bg-[#fff8f2] rounded-3xl py-3 md:py-2 px-4'/>
                     <div>
                         <button className='rounded-3xl py-2 px-8 bg-[#fff8f2] font-semibold'>Login</button>
+                        <Link to="/adminPannel">
+                          <button className='rounded-3xl py-2 px-8 bg-[#fff8f2] font-semibold'>Admin</button>
+                        </Link>
                     </div>
                 </form>
             </div>
