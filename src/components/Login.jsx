@@ -1,5 +1,5 @@
 import React from 'react'
-import bgImage from "../assets/bgImage.jpg"
+import bgImage from "../assets/bgimage.jpg"
 import blackShade from "../assets/blackshade.png"
 import logo from "../assets/logo.png"
 
