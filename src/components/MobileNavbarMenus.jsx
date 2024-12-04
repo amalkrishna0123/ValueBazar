@@ -11,11 +11,11 @@ import { FaYoutube } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 
 
-const MobileNavbarMenus = ({openMenu, setOpenMenu}) => {
+const MobileNavbarMenus = ({openMenu, setOpenMenu,setUsersMenu,usersMenu}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+    setOpenMenu(!openMenu);
   };
   return (
     <div className='fixed top-0 left-0 h-full w-full bg-[#fff] bg-opacity-25 backdrop-blur-sm'>
@@ -24,7 +24,10 @@ const MobileNavbarMenus = ({openMenu, setOpenMenu}) => {
       animate={{ x : 0, opacity:1,transition:{ease:"backInOut",duration:1} }}
       exit={{ x : -100, opacity : .5, transition:{ease:"easeOut",duration:1}}}
       className='fixed top-0 left-0 h-full w-[70%] bg-[#fff] z-10 rounded-r-3xl backdrop-blur-3xl BackgroundColor'>
-        <div className='absolute right-5 top-10 text-xl font-bold cursor-pointer text-[#fff]' onClick={()=> setOpenMenu(!openMenu)}>
+        <div className='absolute right-5 top-10 text-xl font-bold cursor-pointer text-[#fff]' onClick={()=>{
+          setUsersMenu(!usersMenu)
+          setIsOpen(!openMenu)
+        }}>
             <IoClose/>
         </div>
         <div className='flex justify-center items-center h-full'>
@@ -35,7 +38,7 @@ const MobileNavbarMenus = ({openMenu, setOpenMenu}) => {
                   animate={{ y : 0, opacity:1, transition:{ ease:"backInOut", duration:1,delay:.6}}}
                   className='flex justify-center items-center gap-2 cursor-pointer' onClick={()=>setOpenMenu(!openMenu)}><span><FaPeopleGroup/></span>Customer</motion.li>
                 </Link>
-                <Link to="/userCreation">
+                <Link to="/usersTable">
                   <motion.li
                   initial={{ y : 100, opacity:0}}
                   animate={{ y : 0, opacity:1, transition:{ ease:"backInOut", duration:1,delay:.9}}}

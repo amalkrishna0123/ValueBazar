@@ -1,16 +1,48 @@
-import React,{ useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import { getAuth } from "firebase/auth";
+import { getDatabase, ref, get } from "firebase/database";
 import { HiPlusSm } from "react-icons/hi";
 import { FiSearch } from "react-icons/fi";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import MobileNavbarMenus from './MobileNavbarMenus';
 
 const MobileAdminPannel = ({openMenu, setOpenMenu}) => {
+
+  const [userName, setUserName] = useState("Loading...");
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (user) {
+          const db = getDatabase();
+          const userRef = ref(db, `users/${user.uid}`);
+          const snapshot = await get(userRef);
+          if (snapshot.exists()) {
+            const userData = snapshot.val();
+            setUserName(userData.name); // Set the fetched name
+          } else {
+            setUserName("Value Bazar Admin");
+          }
+        } else {
+          setUserName("Guest");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setUserName("Error");
+      }
+    };
+
+    fetchUserName();
+  }, []);
+
   return (
     <div className="w-full">
       <div className="flex justify-between items-center w-full px-2 mb-5">
         <div className=" leading-tight flex flex-col justify-center items-start w-full">
           <div className="text-[12px] font-semibold">Welcome Back</div>
-          <div className="font-bold text-lg">Jackson Paul</div>
+          <div className="font-bold text-lg">{userName}</div>
         </div>
         <div className="">
           <Link to="/addCustomers">

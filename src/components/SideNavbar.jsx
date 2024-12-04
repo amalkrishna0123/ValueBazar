@@ -16,7 +16,9 @@ const SideNavbar = () => {
     <div className='px-4 pt-[150px] flex justify-center w-full'>
       <div>
         <ul className='flex justify-center items-start flex-col gap-5'>
-            <li className='flex justify-center items-center gap-2 text-xl cursor-pointer'><span><FaPeopleGroup/></span>Customer</li>
+            <Link to="/adminPannel">
+              <li className='flex justify-center items-center gap-2 text-xl cursor-pointer'><span><FaPeopleGroup/></span>Customer</li>
+            </Link>
             {/* <li className="NavbarHover">
                   <div className="flex flex-col">
                     <div
@@ -69,7 +71,7 @@ const SideNavbar = () => {
                     )}
                   </div>
                 </li> */}
-            <Link to="/userCreation">
+            <Link to="/usersTable">
               <li className='flex justify-center items-center gap-2 text-xl cursor-pointer'><span><FaUser/></span>User</li>
             </Link>
         </ul>

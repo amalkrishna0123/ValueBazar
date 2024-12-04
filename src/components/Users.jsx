@@ -1,28 +1,28 @@
 import React, { useState } from "react";
 import Navbar from "./Navbar";
 import SideNavbar from "./SideNavbar";
-import AdminPannelTable from "./AdminPannelTable";
+import UsersTable from "./UsersTable";
 
-const AdminPannel = () => {
-  const [openMenu, setOpenMenu] = useState(false);
+const Users = () => {
+  const [usersMenu, setUsersMenu] = useState(false);
 
-  const toggleMenu = () => {
-    setOpenMenu((prev) => !prev);
+  const toggleMenu2 = () => {
+    setUsersMenu(!usersMenu);
   };
 
   return (
     <div>
-      <Navbar toggleMenu={toggleMenu} />
+      <Navbar toggleMenu2={toggleMenu2} />
       <div className="flex justify-center">
         <div className="hidden md:flex md:w-[20%] bg-[#f0eeef] h-screen">
           <SideNavbar />
         </div>
         <div className="md:w-[80%] w-full h-full">
-          <AdminPannelTable openMenu={openMenu} setOpenMenu={setOpenMenu} />
+          <UsersTable usersMenu={usersMenu} setUsersMenu={setUsersMenu}/>
         </div>
       </div>
     </div>
   );
 };
 
-export default AdminPannel;
+export default Users;
