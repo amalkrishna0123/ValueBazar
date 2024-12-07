@@ -10,6 +10,7 @@ import { MdModeEditOutline } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import EditUser from './EditUser';
 import ConfirmationDeletion2 from './ConfirmationDeletion2';
+import StatusToggle from './StatusToggle';
 
 
 const UsersTable = ({ usersMenu, setUsersMenu, toggleMenu2 }) => {
@@ -18,28 +19,6 @@ const UsersTable = ({ usersMenu, setUsersMenu, toggleMenu2 }) => {
     const navigate = useNavigate();
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [adminEmail, setAdminEmail] = useState(null)
-
-    // useEffect(() => {
-    //     const unsubscribe = onAuthStateChanged(auth, (user) => {
-    //         if (user && user.email === 'admin@gmail.com') {
-    //             setIsAdmin(true);
-    //             setAdminEmail(user.email)
-
-    //             const usersRef = ref(database, 'users');
-    //             onValue(usersRef, (snapshot) => {
-    //                 const data = snapshot.val();
-                    
-    //                     const usersArray = Object.entries(data).map(([id, userData]) => ({
-    //                         id,
-    //                         ...userData,
-    //                     }));
-    //                     setUsers(usersArray);
-    //             });
-    //         }
-    //     });
-
-    //     return () => unsubscribe();
-    // }, [navigate]);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -119,7 +98,9 @@ const UsersTable = ({ usersMenu, setUsersMenu, toggleMenu2 }) => {
                 <th className="border border-gray-300 px-4 py-3">Name</th>
                 <th className="border border-gray-300 px-4 py-3">Username</th>
                 <th className="border border-gray-300 px-4 py-3">Mobile No.</th>
-                <th className="border border-gray-300 px-4 py-3">Status</th>
+                {adminEmail === "admin@gmail.com" &&(
+                  <th className="border border-gray-300 px-4 py-3">Status</th>
+                )}
                 <th className="border border-gray-300 px-4 py-3">
                   Created Date
                 </th>
@@ -144,9 +125,14 @@ const UsersTable = ({ usersMenu, setUsersMenu, toggleMenu2 }) => {
                   <td className="border border-gray-300 px-4 py-3">
                     {user.mobileNumber}
                   </td>
-                  <td className="border border-gray-300 px-4 py-3">
-                    {user.status}
-                  </td>
+                  {adminEmail === "admin@gmail.com" && (
+                    <td className="border border-gray-300 px-4 py-3">
+                      <StatusToggle 
+                        userId={user.id} 
+                        currentStatus={user.status} 
+                      />
+                    </td>
+                  )}
                   <td className="border border-gray-300 px-4 py-3">
                     {new Date(user.created_at).toLocaleDateString()}
                   </td>

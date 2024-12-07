@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getDatabase, ref, get } from 'firebase/database'; // Import 'get' from Firebase
 import { useNavigate } from 'react-router-dom';
 import bgImage from "../assets/bgimage.jpg";
 import blackShade from "../assets/blackshade.png";
@@ -38,27 +39,32 @@ const Login = () => {
         formData.password
       );
 
-      // Check if the user is admin
-      if (userCredential.user.email === 'admin@gmail.com') {
+      const user = userCredential.user;
+
+      // Check if user is admin
+      if (user.email === 'admin@gmail.com') {
         navigate('/adminPannel');
+        return;
+      }
+
+      // Fetch user status from Firebase Realtime Database
+      const db = getDatabase();
+      const userRef = ref(db, `users/${user.uid}`);
+      const snapshot = await get(userRef); // Correctly fetch the user data
+
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+        if (userData.status === 'disabled') {
+          navigate('/pageNotFound'); // Redirect if user is disabled
+        } else if (userData.status === 'active') {
+          navigate('/adminPannel'); // Allow login if user is active
+        }
       } else {
-        // Regular user login - you can add specific routing for regular users
-        navigate('/adminPannel'); // Or wherever regular users should go
+        setError('User not found in the database.');
       }
     } catch (error) {
-      switch (error.code) {
-        case 'auth/invalid-email':
-          setError('Invalid email address');
-          break;
-        case 'auth/user-not-found':
-          setError('No user found with this email');
-          break;
-        case 'auth/wrong-password':
-          setError('Incorrect password');
-          break;
-        default:
-          setError('Failed to log in. Please try again.');
-      }
+      console.error('Error during login:', error);
+      setError('Failed to log in. Please check your credentials.');
     } finally {
       setLoading(false);
     }
