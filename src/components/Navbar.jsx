@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { getAuth, signOut } from "firebase/auth"; // Import Firebase functions
 import logo from "../assets/logo.png";
 import { FaUserAltSlash } from "react-icons/fa";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { useNavigate } from "react-router-dom"; // For navigation after logout
+import MobileNavbarMenus from "./MobileNavbarMenus";
 
 const Navbar = ({ toggleMenu, toggleMenu2 }) => {
   const navigate = useNavigate(); // React Router navigation hook
+  const [openMenu, setOpenMenu] = useState(false)
+
+  const handleOpenMenu = () =>{
+    setOpenMenu(!openMenu)
+  }
 
   const handleLogout = async () => {
     const auth = getAuth();
@@ -19,7 +25,7 @@ const Navbar = ({ toggleMenu, toggleMenu2 }) => {
   };
 
   return (
-    <div className="fixed top-0 w-full p-2 bg-[#000] flex justify-between px-2 lg:px-6 items-center rounded-b-lg md:rounded-b-none CustomerBox">
+    <div className="fixed top-0 w-full p-2 bg-[#000] flex justify-between px-2 lg:px-6 items-center rounded-b-lg md:rounded-b-none CustomerBox z-50">
       <div className="h-[60px] md:h-[80px] w-auto">
         <img src={logo} alt="Logo" className="h-full w-full object-contain" />
       </div>
@@ -32,14 +38,15 @@ const Navbar = ({ toggleMenu, toggleMenu2 }) => {
         </span>
         <span
           className="text-3xl md:hidden"
-          onClick={() => {
-            toggleMenu?.();
-            toggleMenu2?.();
-          }}
+          onClick={() => setOpenMenu(!openMenu)}
         >
           <HiMenuAlt4 />
         </span>
       </div>
+      {openMenu && (
+        <MobileNavbarMenus setOpenMenu={setOpenMenu} openMenu={openMenu}/>
+      )}
+      
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth } from "firebase/auth";
-import { getDatabase, ref, get } from "firebase/database";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getDatabase, ref, get,onValue } from "firebase/database";
 import { HiPlusSm } from "react-icons/hi";
 import { FiSearch } from "react-icons/fi";
 import { Link } from "react-router-dom";
@@ -9,6 +9,47 @@ import MobileNavbarMenus from './MobileNavbarMenus';
 const MobileAdminPannel = ({openMenu, setOpenMenu}) => {
 
   const [userName, setUserName] = useState("Loading...");
+  const [totalCustomers, setTotalCustomers] =useState(0)
+
+  useEffect(() => {
+    // Fetch customers from Firebase
+    const fetchCustomers = () => {
+      const db = getDatabase();
+      const customersRef = ref(db, 'customers');
+
+      onValue(customersRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          // Convert object to array of customers
+          const customerList = Object.keys(data).map(key => ({
+            id: key,
+            ...data[key]
+          }));
+
+          // setCustomers(customerList);
+          setTotalCustomers(customerList.length);
+        } else {
+          // setCustomers([]);
+          setTotalCustomers(0);
+        }
+      }, (error) => {
+        console.error("Error fetching customers:", error);
+      });
+    };
+
+    fetchCustomers();
+
+    // Fetch the currently logged-in user's email
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUserEmail(user.email);
+      } else {
+        setCurrentUserEmail(null);
+      }
+    });
+
+  }, []);
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -56,7 +97,7 @@ const MobileAdminPannel = ({openMenu, setOpenMenu}) => {
       <div className="BgColor h-[150px] mx-2 rounded-3xl CustomerBox mb-5 text-[#fff] flex justify-center items-center">
         <div className="flex flex-col justify-center items-center font-semibold">
           Number of Customers
-          <span className="text-3xl font-bold">100</span>
+          <span className="text-3xl font-bold">{totalCustomers}</span>
         </div>
       </div>
       {/* Search Bar */}

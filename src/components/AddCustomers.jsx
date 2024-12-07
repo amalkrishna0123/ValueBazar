@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { getAuth } from "firebase/auth"
-import { getDatabase, ref, push } from "firebase/database"
+import { getDatabase, ref, push,get } from "firebase/database"
 import { Link, useNavigate } from "react-router-dom"
 import bgImage from "../assets/bgimage.jpg"
 import blackShade from "../assets/blackshade.png"
 import logo from "../assets/logo.png"
+import { toast } from 'react-hot-toast';
 
 const AddCustomers = () => {
 
@@ -51,7 +52,6 @@ const AddCustomers = () => {
         setError('');
 
         try {
-            // Get current authenticated user
             const auth = getAuth();
             const user = auth.currentUser;
 
@@ -59,13 +59,36 @@ const AddCustomers = () => {
                 throw new Error('User not authenticated');
             }
 
-            // Fetch current location coordinates
+            const db = getDatabase();
+            const customersRef = ref(db, 'customers');
+
+            // Fetch all customers to check for duplicates
+            const snapshot = await get(customersRef);
+            if (snapshot.exists()) {
+                const customers = Object.values(snapshot.val());
+
+                // Check for duplicate cardNumber or mobileNumber
+                const duplicateCard = customers.find(customer => customer.cardNumber === formData.cardNumber);
+                const duplicateMobile = customers.find(customer => customer.mobileNumber === formData.mobileNumber);
+
+                if (duplicateCard || duplicateMobile) {
+                    if (duplicateCard) {
+                        toast.error('Card number already exists!');
+                    }
+                    if (duplicateMobile) {
+                        toast.error('Mobile number already exists!');
+                    }
+                    return;
+                }
+            }
+
+            // Fetch current location
             const locationData = await fetchCurrentLocation();
 
             // Prepare customer data
             const customerData = {
                 ...formData,
-                createdBy: user.displayName || user.email, // Use display name or email
+                createdBy: user.displayName || user.email,
                 createdAt: new Date().toISOString(),
                 createdByUserId: user.uid,
                 location: locationData ? {
@@ -75,12 +98,10 @@ const AddCustomers = () => {
                 } : null
             };
 
-            // Save to Firebase Realtime Database
-            const db = getDatabase();
-            const customersRef = ref(db, 'customers');
+            // Save to Firebase
             await push(customersRef, customerData);
 
-            // Reset form and navigate
+            toast.success('Customer added successfully!');
             setFormData({
                 customerName: '',
                 cardNumber: '',
@@ -92,6 +113,7 @@ const AddCustomers = () => {
             navigate("/adminPannel");
         } catch (error) {
             setError(error.message);
+            toast.error('An error occurred while adding the customer.');
             console.error('Error adding customer:', error);
         }
     };

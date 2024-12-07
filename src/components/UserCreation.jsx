@@ -42,6 +42,7 @@ const UserCreation = () => {
       const userData = {
         name: formData.name,
         username: formData.username,
+        password: formData.password,
         mobileNumber: formData.mobileNumber,
         status: "disabled",
         created_at: new Date().toISOString(),
@@ -65,7 +66,7 @@ const UserCreation = () => {
 
   return (
     <div className="flex justify-center items-center md:h-screen py-2 md:py-5 overflow-hidden backdrop-blur-3xl px-2">
-      <div className="flex justify-center items-center max-w-[900px] w-full md:h-[650px] h-[700px] bg-[#000] rounded-[60px] relative overflow-hidden backdrop-blur-3xl border-[#fff] border Boxshadow">
+      <div className="flex justify-center items-center max-w-[900px] w-full md:h-[600px] h-[700px] bg-[#000] rounded-[60px] relative overflow-hidden backdrop-blur-3xl border-[#fff] border Boxshadow">
         <div className="absolute w-full h-full">
           <img src={bgImage} className="w-full h-full object-cover" alt="" />
         </div>
@@ -85,13 +86,10 @@ const UserCreation = () => {
             </div>
           </div>
           {/* Add Customers */}
-          <div className="text-[#fff] relative mb-5 md:mb-10 text-center md:text-[40px] text-[30px] font-semibold">
-            Add Users
-          </div>
           <div className="relative w-full px-2 md:px-16 flex flex-col justify-center gap-2 mb-10 text-[#fff]">
 
           <form onSubmit={handleSubmit}>
-            <div className="text-[#fff] relative mb-5 md:mb-10 text-center md:text-[40px] text-[30px] font-semibold">
+            <div className="text-[#fff] relative mb-2 md:mb-10 text-center md:text-[40px] text-[30px] font-semibold">
               Add Users
             </div>
             

@@ -18,7 +18,7 @@ const Users = () => {
           <SideNavbar />
         </div>
         <div className="md:w-[80%] w-full h-full">
-          <UsersTable usersMenu={usersMenu} setUsersMenu={setUsersMenu}/>
+          <UsersTable usersMenu={usersMenu} setUsersMenu={setUsersMenu} toggleMenu2={toggleMenu2}/>
         </div>
       </div>
     </div>

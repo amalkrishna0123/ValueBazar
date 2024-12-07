@@ -11,23 +11,17 @@ import { FaYoutube } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 
 
-const MobileNavbarMenus = ({openMenu, setOpenMenu,setUsersMenu,usersMenu}) => {
+const MobileNavbarMenus = ({setOpenMenu, openMenu}) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleDropdown = () => {
-    setOpenMenu(!openMenu);
-  };
   return (
-    <div className='fixed top-0 left-0 h-full w-full bg-[#fff] bg-opacity-25 backdrop-blur-sm'>
+    <div className='fixed top-0 left-0 h-full w-full bg-[#fff] bg-opacity-25 backdrop-blur-sm z-50'>
       <motion.div
       initial={{ x : -100, opacity:0 }}
       animate={{ x : 0, opacity:1,transition:{ease:"backInOut",duration:1} }}
       exit={{ x : -100, opacity : .5, transition:{ease:"easeOut",duration:1}}}
       className='fixed top-0 left-0 h-full w-[70%] bg-[#fff] z-10 rounded-r-3xl backdrop-blur-3xl BackgroundColor'>
-        <div className='absolute right-5 top-10 text-xl font-bold cursor-pointer text-[#fff]' onClick={()=>{
-          setUsersMenu(!usersMenu)
-          setIsOpen(!openMenu)
-        }}>
+        <div className='absolute right-5 top-10 text-xl font-bold cursor-pointer text-[#fff]' onClick={()=> setOpenMenu(!openMenu)}>
             <IoClose/>
         </div>
         <div className='flex justify-center items-center h-full'>
