@@ -99,7 +99,7 @@ const UsersTable = ({ usersMenu, setUsersMenu, toggleMenu2 }) => {
             </div>
           </Link>
           {adminEmail === "admin@gmail.com" && (
-            <Link to="/userCreation">
+            <Link to="/userCreation" className=' hidden md:flex'>
               <div className="flex justify-center items-center gap-2 text-2xl font-semibold rounded-3xl p-2 bg-[#00A2FF] px-8 py-2 text-[#fff]">
                 Add User
                 <span className="font-bold text-3xl drop-shadow-sm cursor-pointer hidden md:flex">
