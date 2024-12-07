@@ -9,6 +9,8 @@ import { MdModeEditOutline } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import ConfirmDeletion from './ConfirmDeletion';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { FiSearch } from "react-icons/fi";
+
 
 const AdminPannelTable = ({openMenu, setOpenMenu}) => {
 
@@ -111,7 +113,20 @@ const AdminPannelTable = ({openMenu, setOpenMenu}) => {
           </span>
         </div>
       </div>
-      <div className="overflow-x-auto w-full">
+      {/* Mobile Search Bar */}
+      <div className=" relative mb-5 flex justify-center items-center w-[95%] md:hidden">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e)=>setSearchTerm(e.target.value)}
+          placeholder="search....."
+          className="py-3 pl-4 w-full rounded-lg drop-shadow-md outline-none border-none Background"
+        />
+        <span className=" absolute right-3 text-xl">
+          <FiSearch />
+        </span>
+      </div>
+      <div className="overflow-x-auto w-full mb-5">
         <table className="table-auto w-full border-collapse border border-gray-300 text-center">
           <thead className="bg-gray-100 text-sm text-nowrap text-center">
             <tr>

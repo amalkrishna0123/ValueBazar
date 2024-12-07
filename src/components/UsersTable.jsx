@@ -93,11 +93,14 @@ const UsersTable = ({ usersMenu, setUsersMenu, toggleMenu2 }) => {
           <div className="text-center  text-2xl md:text-[30px] font-bold">
             Users List
           </div>
-          <Link to="/userCreation">
-            <div className="p-1 rounded-full bg-[#f0eeef] font-bold text-3xl drop-shadow-sm cursor-pointer md:hidden">
-              <HiPlusSm />
-            </div>
-          </Link>
+          {adminEmail === "admin@gmail.com" && (
+            <Link to="/userCreation">
+              <div className="p-1 rounded-full bg-[#f0eeef] font-bold text-3xl drop-shadow-sm cursor-pointer md:hidden">
+                <HiPlusSm />
+              </div>
+            </Link>
+          )}
+          
           {adminEmail === "admin@gmail.com" && (
             <Link to="/userCreation" className=' hidden md:flex'>
               <div className="flex justify-center items-center gap-2 text-2xl font-semibold rounded-3xl p-2 bg-[#00A2FF] px-8 py-2 text-[#fff]">
@@ -109,7 +112,7 @@ const UsersTable = ({ usersMenu, setUsersMenu, toggleMenu2 }) => {
             </Link>
           )}
         </div>
-        <div className="overflow-x-auto w-full">
+        <div className="overflow-x-auto w-full mb-5">
           <table className="table-auto w-full border-collapse border border-gray-300 text-center">
             <thead className="bg-gray-100 text-sm text-nowrap text-center font-bold">
               <tr>

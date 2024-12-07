@@ -5,11 +5,15 @@ import { HiPlusSm } from "react-icons/hi";
 import { FiSearch } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import MobileNavbarMenus from './MobileNavbarMenus';
+import AdminPannelTable from './AdminPannelTable';
 
 const MobileAdminPannel = ({openMenu, setOpenMenu}) => {
 
   const [userName, setUserName] = useState("Loading...");
   const [totalCustomers, setTotalCustomers] =useState(0)
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentUserEmail, setCurrentUserEmail] = useState(null); // Track the logged-in user's email
+  const [customers, setCustomers] = useState([])
 
   useEffect(() => {
     // Fetch customers from Firebase
@@ -26,10 +30,10 @@ const MobileAdminPannel = ({openMenu, setOpenMenu}) => {
             ...data[key]
           }));
 
-          // setCustomers(customerList);
+          setCustomers(customerList);
           setTotalCustomers(customerList.length);
         } else {
-          // setCustomers([]);
+          setCustomers([]);
           setTotalCustomers(0);
         }
       }, (error) => {
@@ -78,6 +82,14 @@ const MobileAdminPannel = ({openMenu, setOpenMenu}) => {
     fetchUserName();
   }, []);
 
+  // Filter customers based on search term
+  const filteredCustomers = customers.filter(customer => 
+    customer.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    customer.locationArea.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    customer.mobileNumber.includes(searchTerm) ||
+    customer.cardNumber.includes(searchTerm)
+  );
+
   return (
     <div className="w-full">
       <div className="flex justify-between items-center w-full px-2 mb-5">
@@ -101,15 +113,19 @@ const MobileAdminPannel = ({openMenu, setOpenMenu}) => {
         </div>
       </div>
       {/* Search Bar */}
-      <div className=" relative mb-5 mx-2 flex justify-center items-center">
+      {/* <div className=" relative mb-5 mx-2 flex justify-center items-center">
         <input
           type="text"
+          value={searchTerm}
+          onChange={(e)=>setSearchTerm(e.target.value)}
           placeholder="search....."
           className="py-3 pl-4 w-full rounded-lg drop-shadow-md outline-none border-none Background"
         />
         <span className=" absolute right-3 text-xl">
           <FiSearch />
         </span>
+      </div> */}
+      <div>
       </div>
       {openMenu && (
         <MobileNavbarMenus openMenu={openMenu} setOpenMenu={setOpenMenu}/>

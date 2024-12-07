@@ -28,13 +28,17 @@ const UserCreation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Get the current auth instance
       const auth = getAuth();
       const db = getDatabase();
       
-      // Create user in Firebase Authentication
+      // Store the current admin user
+      const adminUser = auth.currentUser;
+      
+      // Create new user account
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        formData.username, // Using username as email
+        formData.username,
         formData.password
       );
       
@@ -49,17 +53,27 @@ const UserCreation = () => {
         User_uid: userCredential.user.uid
       };
       
+      // Set user data in database
       await set(ref(db, `users/${userCredential.user.uid}`), userData);
       
-      // Reset form and navigate back
+      // Re-authenticate as admin if needed
+      if (adminUser && adminUser.email === 'admin@gmail.com') {
+        await auth.updateCurrentUser(adminUser);
+      }
+      
+      // Reset form
       setFormData({
         name: "",
         username: "",
         password: "",
         mobileNumber: ""
       });
+
+      // Navigate back to users table
       navigate("/usersTable");
+      
     } catch (error) {
+      console.error("Error creating user:", error);
       setError(error.message);
     }
   };
