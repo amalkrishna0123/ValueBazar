@@ -54,23 +54,32 @@ const AddCustomers = () => {
         try {
             const auth = getAuth();
             const user = auth.currentUser;
-
+    
             if (!user) {
                 throw new Error('User not authenticated');
             }
-
+    
             const db = getDatabase();
-            const customersRef = ref(db, 'customers');
-
-            // Fetch all customers to check for duplicates
-            const snapshot = await get(customersRef);
+            const userRef = ref(db, `users/${user.uid}`);
+            const snapshot = await get(userRef);
+    
+            let userName = "Value Bazar Admin"; // Default name
             if (snapshot.exists()) {
-                const customers = Object.values(snapshot.val());
-
+                const userData = snapshot.val();
+                userName = userData.name || "Value Bazar Admin"; // Fetch the name or fallback to default
+            }
+    
+            const customersRef = ref(db, 'customers');
+    
+            // Fetch all customers to check for duplicates
+            const customersSnapshot = await get(customersRef);
+            if (customersSnapshot.exists()) {
+                const customers = Object.values(customersSnapshot.val());
+    
                 // Check for duplicate cardNumber or mobileNumber
                 const duplicateCard = customers.find(customer => customer.cardNumber === formData.cardNumber);
                 const duplicateMobile = customers.find(customer => customer.mobileNumber === formData.mobileNumber);
-
+    
                 if (duplicateCard || duplicateMobile) {
                     if (duplicateCard) {
                         toast.error('Card number already exists!');
@@ -88,7 +97,7 @@ const AddCustomers = () => {
             // Prepare customer data
             const customerData = {
                 ...formData,
-                createdBy: user.displayName,
+                createdBy: userName, // Use the fetched name
                 createdAt: new Date().toISOString(),
                 createdByUserId: user.uid,
                 location: locationData ? {
@@ -97,7 +106,6 @@ const AddCustomers = () => {
                     googleMapsLink: locationData.googleMapsLink
                 } : null
             };
-
             // Save to Firebase
             await push(customersRef, customerData);
 

@@ -22,44 +22,52 @@ const AdminPannelTable = ({openMenu, setOpenMenu}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch customers from Firebase
     const fetchCustomers = () => {
-      const db = getDatabase();
-      const customersRef = ref(db, 'customers');
+        const db = getDatabase();
+        const customersRef = ref(db, 'customers');
 
-      onValue(customersRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          // Convert object to array of customers
-          const customerList = Object.keys(data).map(key => ({
-            id: key,
-            ...data[key]
-          }));
+        onValue(customersRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                // Convert object to array of customers
+                const customerList = Object.keys(data).map(key => ({
+                    id: key,
+                    ...data[key]
+                }));
 
-          setCustomers(customerList);
-          setTotalCustomers(customerList.length);
-        } else {
-          setCustomers([]);
-          setTotalCustomers(0);
-        }
-      }, (error) => {
-        console.error("Error fetching customers:", error);
-      });
+                setCustomers(customerList);
+                setTotalCustomers(customerList.length);
+            } else {
+                setCustomers([]);
+                setTotalCustomers(0);
+            }
+        }, (error) => {
+            console.error("Error fetching customers:", error);
+        });
+    };
+
+    const fetchUserName = () => {
+        const auth = getAuth();
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const db = getDatabase();
+                const userRef = ref(db, `users/${user.uid}`);
+                const snapshot = await get(userRef);
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    setCurrentUserEmail(userData.name || "Value Bazar Admin"); // Use name instead of email
+                } else {
+                    setCurrentUserEmail("Value Bazar Admin");
+                }
+            } else {
+                setCurrentUserEmail("Guest");
+            }
+        });
     };
 
     fetchCustomers();
-
-    // Fetch the currently logged-in user's email
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUserEmail(user.email);
-      } else {
-        setCurrentUserEmail(null);
-      }
-    });
-
-  }, []);
+    fetchUserName();
+}, []);
 
   // Filter customers based on search term
   const filteredCustomers = customers.filter(customer => 
