@@ -88,7 +88,7 @@ const AddCustomers = () => {
             // Prepare customer data
             const customerData = {
                 ...formData,
-                createdBy: user.displayName || user.email,
+                createdBy: user.displayName,
                 createdAt: new Date().toISOString(),
                 createdByUserId: user.uid,
                 location: locationData ? {

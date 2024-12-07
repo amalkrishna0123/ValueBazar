@@ -67,7 +67,7 @@ const ConfirmationDeletion2 = () => {
             Enter Security Code to Delete Customer: {customer.customerName}
           </div>
           {error && <div className="text-red-500 mb-3">{error}</div>}
-          <div className='w-full mb-5'>
+          <div className='w-full mb-5 px-2'>
             <input 
               type="text" 
               placeholder="Enter Your Security Code"  

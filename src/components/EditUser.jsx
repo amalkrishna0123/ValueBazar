@@ -70,7 +70,7 @@ const EditUser = () => {
                 <div className='flex flex-col justify-center items-center w-full py-2 pt-10'>
                     <div className='relative text-[#fff] text-center text-3xl mb-5 font-bold'>Edit User</div>
                     {error && <div className="text-red-500 mb-4">{error}</div>}
-                    <div className='relative px-2 md:px-8 w-full flex flex-col justify-center items-center gap-5'>
+                    <div className='relative px-5 md:px-8 w-full flex flex-col justify-center items-center gap-5'>
                         <input
                             type="text"
                             name="name"

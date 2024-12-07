@@ -107,9 +107,9 @@ const MobileAdminPannel = ({openMenu, setOpenMenu}) => {
       </div>
       {/* Customer Dashboard */}
       <div className="BgColor h-[150px] mx-2 rounded-3xl CustomerBox mb-5 text-[#fff] flex justify-center items-center">
-        <div className="flex flex-col justify-center items-center font-semibold">
+        <div className="flex flex-col justify-center items-center font-semibold text-xl">
           Number of Customers
-          <span className="text-3xl font-bold">{totalCustomers}</span>
+          <span className="text-[30px] mt-2 font-bold">{totalCustomers}</span>
         </div>
       </div>
       {/* Search Bar */}

@@ -54,7 +54,7 @@ const ConfirmDeletion = () => {
                     {error && (
                         <div className="text-red-500 mb-3">{error}</div>
                     )}
-                    <div className='w-full mb-5'>
+                    <div className='w-full mb-5 px-2'>
                         <input 
                             type="text" 
                             placeholder="Enter Security Code" 

@@ -116,17 +116,17 @@ const UsersTable = ({ usersMenu, setUsersMenu, toggleMenu2 }) => {
             <tbody className="text-center text-sm text-nowrap font-semibold">
               {users.map((user) => (
                 <tr key={user.id} className="hover:bg-gray-50">
-                  <td className="border border-gray-300 px-4 py-3">
+                  <td className="border border-gray-300 px-4 py-4">
                     {user.name}
                   </td>
-                  <td className="border border-gray-300 px-4 py-3">
+                  <td className="border border-gray-300 px-4 py-4">
                     {user.username}
                   </td>
-                  <td className="border border-gray-300 px-4 py-3">
+                  <td className="border border-gray-300 px-4 py-4">
                     {user.mobileNumber}
                   </td>
                   {adminEmail === "admin@gmail.com" && (
-                    <td className="border border-gray-300 px-4 py-3">
+                    <td className="border border-gray-300 px-4 py-4">
                       <StatusToggle 
                         userId={user.id} 
                         currentStatus={user.status} 
