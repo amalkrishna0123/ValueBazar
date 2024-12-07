@@ -186,6 +186,7 @@ const AddCustomers = () => {
                                 onChange={handleInputChange}
                                 className="border-none outline-none py-3 px-4 rounded-3xl w-full md:w-3/4 text-[#000]"
                                 required
+                                title="Enter 10 digit Mobile Number" pattern="[1-9]{1}[0-9]{9}"
                             />
                         </div>
 
