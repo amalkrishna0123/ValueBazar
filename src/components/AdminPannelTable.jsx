@@ -4,7 +4,7 @@ import { LuSearch } from "react-icons/lu";
 import { FaPlus } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom"
 import MobileAdminPannel from './MobileAdminPannel';
-import { getDatabase, ref, onValue, remove } from "firebase/database";
+import { getDatabase, ref, onValue, remove, get } from "firebase/database";
 import { MdModeEditOutline } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import ConfirmDeletion from './ConfirmDeletion';
@@ -19,6 +19,8 @@ const AdminPannelTable = ({openMenu, setOpenMenu}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCustomerForDeletion, setSelectedCustomerForDeletion] = useState(null);
   const [currentUserEmail, setCurrentUserEmail] = useState(null); // Track the logged-in user's email
+  const [isAdmin, setIsAdmin] = useState(false); // Check if the current user is admin
+  const [authUserEmail, setAuthUserEmail] = useState(null); // Store email of the logged-in user
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,16 +56,21 @@ const AdminPannelTable = ({openMenu, setOpenMenu}) => {
                 const userRef = ref(db, `users/${user.uid}`);
                 const snapshot = await get(userRef);
                 if (snapshot.exists()) {
-                    const userData = snapshot.val();
-                    setCurrentUserEmail(userData.name || "Value Bazar Admin"); // Use name instead of email
-                } else {
-                    setCurrentUserEmail("Value Bazar Admin");
-                }
-            } else {
-                setCurrentUserEmail("Guest");
-            }
-        });
-    };
+                  const userData = snapshot.val();
+                  setCurrentUserEmail(userData.name || "Value Bazar Admin"); // Use name instead of email
+                  setIsAdmin(userData.role === 'Value Bazar Admin'); // Check if the user is admin
+              } else {
+                  console.warn("No user data found in database.");
+                  setCurrentUserEmail("Value Bazar Admin");
+                  setIsAdmin(false);
+              }
+              // Store the logged-in user's email
+              setAuthUserEmail(user.email);
+          } else {
+              setCurrentUserEmail("Guest");
+          }
+      });
+  };
 
     fetchCustomers();
     fetchUserName();
@@ -150,12 +157,15 @@ const AdminPannelTable = ({openMenu, setOpenMenu}) => {
                 Created by Users
               </th>
               <th className="border border-gray-300 px-4 py-2">Date</th>
-              {currentUserEmail === "admin@gmail.com" && (
+             {authUserEmail === "admin@gmail.com" && (
                 <>
                   <th className="border border-gray-300 px-4 py-2">Edit</th>
                   <th className="border border-gray-300 px-4 py-2">Delete</th>
                 </>
-              )}
+             )}
+                
+                
+              
             </tr>
           </thead>
 
@@ -196,7 +206,7 @@ const AdminPannelTable = ({openMenu, setOpenMenu}) => {
                 <td className="border border-gray-300 px-4 py-2">
                   {new Date(customer.createdAt).toLocaleDateString()}
                 </td>
-                {currentUserEmail === "admin@gmail.com" && (
+                {authUserEmail ==="admin@gmail.com" &&(
                   <>
                     <Link to="/editCustomer" state={{ customer: customer }}>
                       <td className="border border-gray-300 px-4 py-2 cursor-pointer">
@@ -211,6 +221,8 @@ const AdminPannelTable = ({openMenu, setOpenMenu}) => {
                     </td>
                   </>
                 )}
+                  
+                
               </tr>
             ))}
           </tbody>
