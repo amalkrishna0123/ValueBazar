@@ -10,6 +10,7 @@ import { MdDelete } from "react-icons/md";
 import ConfirmDeletion from './ConfirmDeletion';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { FiSearch } from "react-icons/fi";
+import ExportToExcel from './ExportToExcel';
 
 
 const AdminPannelTable = ({openMenu, setOpenMenu}) => {
@@ -22,6 +23,18 @@ const AdminPannelTable = ({openMenu, setOpenMenu}) => {
   const [isAdmin, setIsAdmin] = useState(false); // Check if the current user is admin
   const [authUserEmail, setAuthUserEmail] = useState(null); // Store email of the logged-in user
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1); // Current page state
+  const itemsPerPage = 10; // Number of items per page
+
+  
+  // Handle page navigation
+  const handlePrevious = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
 
   useEffect(() => {
     const fetchCustomers = () => {
@@ -77,12 +90,21 @@ const AdminPannelTable = ({openMenu, setOpenMenu}) => {
 }, []);
 
   // Filter customers based on search term
-  const filteredCustomers = customers.filter(customer => 
-    customer.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.locationArea.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.mobileNumber.includes(searchTerm) ||
-    customer.cardNumber.includes(searchTerm)
+  const filteredCustomers = customers.filter(customer =>
+    customer.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    customer.locationArea?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    customer.mobileNumber?.includes(searchTerm) ||
+    customer.cardNumber?.includes(searchTerm)
   );
+
+  // Calculate total pages
+const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
+
+// Get the current page data
+const currentData = filteredCustomers.slice(
+  (currentPage - 1) * itemsPerPage,
+  currentPage * itemsPerPage
+);
 
   const handleDeleteClick = (customer) => {
     // Store the selected customer and navigate to confirmation page
@@ -109,6 +131,9 @@ const AdminPannelTable = ({openMenu, setOpenMenu}) => {
             </span>
           </div>
         </Link>
+        <div>
+          <ExportToExcel/>
+        </div>
         <div className=" px-8 py-3 rounded-lg bg-[#ff9192] flex justify-center items-center CustomerBox">
           <div className="flex flex-col justify-center items-center text-center font-semibold text-[#fff]">
             Number Of Customers
@@ -164,13 +189,12 @@ const AdminPannelTable = ({openMenu, setOpenMenu}) => {
                 </>
              )}
                 
-                
-              
+            
             </tr>
           </thead>
 
           <tbody className="text-center text-sm text-nowrap">
-            {filteredCustomers.map((customer) => (
+            {currentData.map((customer) => (
               <tr key={customer.id} className="hover:bg-gray-50">
                 <td className="border border-gray-300 px-4 py-4 cursor-pointer text-xl">
                   {customer.location?.googleMapsLink ? (
@@ -227,6 +251,34 @@ const AdminPannelTable = ({openMenu, setOpenMenu}) => {
             ))}
           </tbody>
         </table>
+        {/* Pagination Controls */}
+  <div className="flex justify-between items-center mt-4">
+    <button
+      onClick={handlePrevious}
+      disabled={currentPage === 1}
+      className={`px-4 py-2 border border-gray-300 rounded ${
+        currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100"
+      }`}
+    >
+      Previous
+    </button>
+
+    <span className="text-sm text-gray-600">
+      Page {currentPage} of {totalPages}
+    </span>
+
+    <button
+      onClick={handleNext}
+      disabled={currentPage === totalPages}
+      className={`px-4 py-2 border border-gray-300 rounded ${
+        currentPage === totalPages
+          ? "opacity-50 cursor-not-allowed"
+          : "hover:bg-gray-100"
+      }`}
+    >
+      Next
+    </button>
+  </div>
       </div>
       {/* <ConfirmDeletion/> */}
     </div>
